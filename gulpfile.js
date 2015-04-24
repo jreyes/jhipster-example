@@ -8,6 +8,7 @@ var gulp = require('gulp'),
     minifyCss = require('gulp-minify-css'),
     usemin = require('gulp-usemin'),
     uglify = require('gulp-uglify'),
+    compass = require('gulp-compass'),
     minifyHtml = require('gulp-minify-html'),
     imagemin = require('gulp-imagemin'),
     ngAnnotate = require('gulp-ng-annotate'),
@@ -31,6 +32,7 @@ var yeoman = {
     dist: 'src/main/webapp/dist/',
     test: 'src/test/javascript/spec/',
     tmp: '.tmp/',
+    scss: 'src/main/scss/',
     port: 9000,
     apiPort: 8080,
     liveReloadPort: 35729
@@ -77,14 +79,30 @@ gulp.task('images', function() {
         pipe(browserSync.reload({stream: true}));
 });
 
-gulp.task('styles', [], function() {
+gulp.task('compass', function() {
+    return gulp.src(yeoman.scss + '**/*.scss').
+        pipe(compass({
+                project: __dirname,
+                sass: 'src/main/scss',
+                css: 'src/main/webapp/assets/styles',
+                generated_images: '.tmp/images/generated',
+                image: 'src/main/webapp/assets/images',
+                javascript: 'src/main/webapp/scripts',
+                font: 'src/main/webapp/assets/fonts',
+                import_path: 'src/main/webapp/bower_components',
+                relative: false
+        })).
+        pipe(gulp.dest(yeoman.tmp + 'styles'));
+});
+
+gulp.task('styles', ['compass'], function() {
     return gulp.src(yeoman.app + 'assets/styles/**/*.css').
         pipe(gulp.dest(yeoman.tmp)).
         pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task('serve', function() {
-    runSequence('wiredep:test', 'wiredep:app', 'ngconstant:dev', function () {
+    runSequence('wiredep:test', 'wiredep:app', 'ngconstant:dev', 'compass', function () {
         var baseUri = 'http://localhost:' + yeoman.apiPort;
         // Routes to proxy to the backend. Routes ending with a / will setup
         // a redirect so that if accessed without a trailing slash, will
@@ -145,7 +163,7 @@ gulp.task('serve', function() {
 gulp.task('watch', function() {
     gulp.watch('bower.json', ['wiredep:test', 'wiredep:app']);
     gulp.watch(['gulpfile.js', 'pom.xml'], ['ngconstant:dev']);
-    gulp.watch(yeoman.app + 'assets/styles/**/*.css', ['styles']);
+    gulp.watch(yeoman.scss + '**/*.scss', ['styles']);
     gulp.watch(yeoman.app + 'assets/images/**', ['images']);
     gulp.watch([yeoman.app + '*.html', yeoman.app + 'scripts/**']).on('change', browserSync.reload);
 });
@@ -159,7 +177,16 @@ gulp.task('wiredep:app', function () {
         }))
         .pipe(gulp.dest('src/main/webapp'));
 
-    return s;
+    return es.merge(s, gulp.src('src/main/scss/main.scss')
+        .pipe(wiredep({
+            exclude: [
+                /angular-i18n/,  // localizations are loaded dynamically
+                /swagger-ui/,
+                'bower_components/bootstrap/' // Exclude Bootstrap LESS as we use bootstrap-sass
+            ],
+            ignorePath: /\.\.\/webapp\/bower_components\// // remove ../webapp/bower_components/ from paths of injected sass files
+        }))
+        .pipe(gulp.dest('src/main/scss')));
 });
 
 gulp.task('wiredep:test', function () {
