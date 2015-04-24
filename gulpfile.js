@@ -1,4 +1,4 @@
-// Generated on 2015-04-21 using generator-jhipster 2.7.0
+// Generated on 2015-04-24 using generator-jhipster 2.8.0
 /* jshint camelcase: false */
 'use strict';
 
@@ -96,7 +96,7 @@ gulp.task('serve', function() {
             '/configprops',
             '/api-docs',
             '/metrics',
-            '/dump/',
+            '/dump',
             '/console/'
         ];
 
@@ -111,14 +111,15 @@ gulp.task('serve', function() {
         var proxies = [
             // Ensure trailing slash in routes that require it
             function (req, res, next) {
-                for (var route in requireTrailingSlash) {
+                requireTrailingSlash.forEach(function(route){
                     if (url.parse(req.url).path === route) {
                         res.statusCode = 301;
                         res.setHeader('Location', route + '/');
                         res.end();
                     }
-                    next();
-                }
+                });
+
+                next();
             }
         ].concat(
             // Build a list of proxies for routes: [route1_proxy, route2_proxy, ...]
@@ -143,7 +144,7 @@ gulp.task('serve', function() {
 
 gulp.task('watch', function() {
     gulp.watch('bower.json', ['wiredep:test', 'wiredep:app']);
-    gulp.watch(['Gruntfile.js', 'pom.xml'], ['ngconstant:dev']);
+    gulp.watch(['gulpfile.js', 'pom.xml'], ['ngconstant:dev']);
     gulp.watch(yeoman.app + 'assets/styles/**/*.css', ['styles']);
     gulp.watch(yeoman.app + 'assets/images/**', ['images']);
     gulp.watch([yeoman.app + '*.html', yeoman.app + 'scripts/**']).on('change', browserSync.reload);

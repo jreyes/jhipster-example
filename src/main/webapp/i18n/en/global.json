@@ -7,7 +7,7 @@
             "entities": {
                 "main": "Entities",
                 "category": "Category",
-                "additionalEntity": "JHipster will add addtional entities"
+                "additionalEntity": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
                 "main": "Account",

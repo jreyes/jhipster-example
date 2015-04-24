@@ -49,7 +49,7 @@ class CategoryGatlingTest extends Simulation {
         .headers(headers_http_authenticated)
         .formParam("j_username", "admin")
         .formParam("j_password", "admin")
-        .formParam("_spring_security_remember_me", "true")
+        .formParam("remember-me", "true")
         .formParam("submit", "Login"))
         .pause(1)
         .exec(http("Authenticated request")

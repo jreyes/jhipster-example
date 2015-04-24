@@ -12,7 +12,7 @@ import java.util.Objects;
  * A Category.
  */
 @Entity
-@Table(name = "T_CATEGORY")
+@Table(name = "CATEGORY")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Category implements Serializable {
 

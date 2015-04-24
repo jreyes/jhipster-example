@@ -11,7 +11,7 @@
         Added the entity Category.
     -->
     <changeSet id="20150421164115" author="jhipster">
-        <createTable tableName="T_CATEGORY">
+        <createTable tableName="CATEGORY">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
