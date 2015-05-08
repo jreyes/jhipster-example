@@ -27,6 +27,10 @@ spring:
             hibernate.generate_statistics: false
             hibernate.cache.region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
             
+    data:
+        elasticsearch:
+            cluster-name:
+            cluster-nodes: localhost:9200
     thymeleaf:
         mode: XHTML
         cache: true
@@ -42,6 +46,10 @@ metrics:
         host: localhost
         port: 2003
         prefix: jhipster
+
+http:
+    cache:
+        timeToLiveInDays: 31
 
 cache:
     timeToLiveSeconds: 3600

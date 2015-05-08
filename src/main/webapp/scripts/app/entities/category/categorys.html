@@ -2,14 +2,30 @@
 
     <h2 translate="jhipsterApp.category.home.title">Category</h2>
 
-    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#saveCategoryModal" ng-click="clear()">
-        <span class="glyphicon glyphicon-flash"></span> <span translate="jhipsterApp.category.home.createLabel">Create a new Category</span>
-    </button>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#saveCategoryModal" ng-click="clear()">
+                    <span class="glyphicon glyphicon-flash"></span> <span translate="jhipsterApp.category.home.createLabel">Create a new Category</span>
+                </button>
+            </div>
+            <div class="col-md-8">
+                <form name="searchForm" class="form-inline">
+                    <div class="form-group">
+                        <input type="text" class="form-control" ng-model="searchQuery" id="searchQuery" placeholder="query">
+                    </div>
+                    <button class="btn btn-info" ng-click="search()"><span class="glyphicon glyphicon-search"></span> <span>Search a Category</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="saveCategoryModal" tabindex="-1" role="dialog" aria-labelledby="myCategoryLabel"
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form name="editForm" role="form" novalidate ng-submit="create()" show-validation>
+                <form name="editForm" role="form" novalidate ng-submit="save()" show-validation>
 
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
@@ -87,17 +103,17 @@
                     <td>
                         <button type="submit"
                                 ui-sref="categoryDetail({id:category.id})"
-                                class="btn btn-info">
+                                class="btn btn-info btn-sm">
                             <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span translate="entity.action.view"> View</span>
                         </button>
                         <button type="submit"
-                                ng-click="update(category.id)"
-                                class="btn btn-primary">
+                                ng-click="showUpdate(category.id)"
+                                class="btn btn-primary btn-sm">
                             <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span translate="entity.action.edit"> Edit</span>
                         </button>
                         <button type="submit"
                                 ng-click="delete(category.id)"
-                                class="btn btn-danger">
+                                class="btn btn-danger btn-sm">
                             <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span translate="entity.action.delete"> Delete</span>
                         </button>
                     </td>

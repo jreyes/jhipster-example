@@ -3,6 +3,7 @@ package jhipster.web.rest;
 import jhipster.Application;
 import jhipster.domain.Category;
 import jhipster.repository.CategoryRepository;
+import jhipster.repository.search.CategorySearchRepository;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -44,6 +45,9 @@ public class CategoryResourceTest {
     @Inject
     private CategoryRepository categoryRepository;
 
+    @Inject
+    private CategorySearchRepository categorySearchRepository;
+
     private MockMvc restCategoryMockMvc;
 
     private Category category;
@@ -53,6 +57,7 @@ public class CategoryResourceTest {
         MockitoAnnotations.initMocks(this);
         CategoryResource categoryResource = new CategoryResource();
         ReflectionTestUtils.setField(categoryResource, "categoryRepository", categoryRepository);
+        ReflectionTestUtils.setField(categoryResource, "categorySearchRepository", categorySearchRepository);
         this.restCategoryMockMvc = MockMvcBuilders.standaloneSetup(categoryResource).build();
     }
 
@@ -121,7 +126,7 @@ public class CategoryResourceTest {
     public void updateCategory() throws Exception {
         // Initialize the database
         categoryRepository.saveAndFlush(category);
-		
+
 		int databaseSizeBeforeUpdate = categoryRepository.findAll().size();
 
         // Update the category
@@ -143,7 +148,7 @@ public class CategoryResourceTest {
     public void deleteCategory() throws Exception {
         // Initialize the database
         categoryRepository.saveAndFlush(category);
-		
+
 		int databaseSizeBeforeDelete = categoryRepository.findAll().size();
 
         // Get the category

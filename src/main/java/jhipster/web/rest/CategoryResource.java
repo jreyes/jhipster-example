@@ -3,6 +3,7 @@ package jhipster.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import jhipster.domain.Category;
 import jhipster.repository.CategoryRepository;
+import jhipster.repository.search.CategorySearchRepository;
 import jhipster.web.rest.util.PaginationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing Category.
@@ -31,6 +36,9 @@ public class CategoryResource {
 
     @Inject
     private CategoryRepository categoryRepository;
+
+    @Inject
+    private CategorySearchRepository categorySearchRepository;
 
     /**
      * POST  /categorys -> Create a new category.
@@ -45,6 +53,7 @@ public class CategoryResource {
             return ResponseEntity.badRequest().header("Failure", "A new category cannot already have an ID").build();
         }
         categoryRepository.save(category);
+        categorySearchRepository.save(category);
         return ResponseEntity.created(new URI("/api/categorys/" + category.getId())).build();
     }
 
@@ -61,6 +70,7 @@ public class CategoryResource {
             return create(category);
         }
         categoryRepository.save(category);
+        categorySearchRepository.save(category);
         return ResponseEntity.ok().build();
     }
 
@@ -105,5 +115,20 @@ public class CategoryResource {
     public void delete(@PathVariable Long id) {
         log.debug("REST request to delete Category : {}", id);
         categoryRepository.delete(id);
+        categorySearchRepository.delete(id);
+    }
+
+    /**
+     * SEARCH  /_search/categorys/:query -> search for the category corresponding
+     * to the query.
+     */
+    @RequestMapping(value = "/_search/categorys/{query}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public List<Category> search(@PathVariable String query) {
+        return StreamSupport
+            .stream(categorySearchRepository.search(queryString(query)).spliterator(), false)
+            .collect(Collectors.toList());
     }
 }

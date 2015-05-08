@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('jhipsterApp')
-    .controller('CategoryController', function ($scope, Category, ParseLinks) {
+    .controller('CategoryController', function ($scope, Category, CategorySearch, ParseLinks) {
         $scope.categorys = [];
         $scope.page = 1;
         $scope.loadAll = function() {
@@ -23,20 +23,25 @@ angular.module('jhipsterApp')
         };
         $scope.loadAll();
 
-        $scope.create = function () {
-            Category.update($scope.category,
-                function () {
-                    $scope.reset();
-                    $('#saveCategoryModal').modal('hide');
-                    $scope.clear();
-                });
-        };
-
-        $scope.update = function (id) {
+        $scope.showUpdate = function (id) {
             Category.get({id: id}, function(result) {
                 $scope.category = result;
                 $('#saveCategoryModal').modal('show');
             });
+        };
+
+        $scope.save = function () {
+            if ($scope.category.id != null) {
+                Category.update($scope.category,
+                    function () {
+                        $scope.refresh();
+                    });
+            } else {
+                Category.save($scope.category,
+                    function () {
+                        $scope.refresh();
+                    });
+            }
         };
 
         $scope.delete = function (id) {
@@ -53,6 +58,22 @@ angular.module('jhipsterApp')
                     $('#deleteCategoryConfirmation').modal('hide');
                     $scope.clear();
                 });
+        };
+
+        $scope.search = function () {
+            CategorySearch.query({query: $scope.searchQuery}, function(result) {
+                $scope.categorys = result;
+            }, function(response) {
+                if(response.status === 404) {
+                    $scope.loadAll();
+                }
+            });
+        };
+
+        $scope.refresh = function () {
+            $scope.reset();
+            $('#saveCategoryModal').modal('hide');
+            $scope.clear();
         };
 
         $scope.clear = function () {
