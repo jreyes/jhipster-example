@@ -21,7 +21,7 @@
     </prerequisites>
 
     <properties>
-        <HikariCP.version>2.2.5</HikariCP.version>
+        <HikariCP.version>2.3.7</HikariCP.version>
         <assertj-core.version>1.0.0m1</assertj-core.version>
         <awaitility.version>1.4.0</awaitility.version>
         <commons-io.version>2.4</commons-io.version>
@@ -597,32 +597,6 @@
                     <artifactId>spring-boot-starter-tomcat</artifactId>
                 </dependency>
             </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.github.trecloux</groupId>
-                        <artifactId>yeoman-maven-plugin</artifactId>
-                        <version>0.4</version>
-                        <executions>
-                            <execution>
-                                <id>run-grunt</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>build</goal>
-                                </goals>
-                                <configuration>
-                                    <skipTests>true</skipTests>
-                                    <buildTool>grunt</buildTool>
-                                    <buildArgs>compass:server --force</buildArgs>
-                                </configuration>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <yeomanProjectDirectory>${project.basedir}</yeomanProjectDirectory>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
         <profile>
             <id>fast</id>
@@ -672,8 +646,7 @@
                                     <goal>build</goal>
                                 </goals>
                                 <configuration>
-                                    <buildTool>grunt</buildTool>
-                                    <buildArgs>build --force --no-color</buildArgs>
+                                    <buildTool>gulp</buildTool>
                                 </configuration>
                             </execution>
                         </executions>
