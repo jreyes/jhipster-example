@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // Generated on 2015-10-22 using generator-jhipster 2.22.0
+=======
+// Generated on 2015-05-19 using generator-jhipster 2.11.1
+>>>>>>> origin/master
 /* jshint camelcase: false */
 'use strict';
 
@@ -110,9 +114,13 @@ gulp.task('serve', function() {
             '/configuration/ui',
             '/swagger-resources',
             '/metrics',
+<<<<<<< HEAD
             '/websocket/tracker',
             '/dump',
             '/console/'
+=======
+            '/dump'
+>>>>>>> origin/master
         ];
 
         var requireTrailingSlash = proxyRoutes.filter(function (r) {

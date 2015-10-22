@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "jhipster",
   "version": "0.0.0",
   "appPath": "src/main/webapp",
@@ -7,6 +8,31 @@
     "angular": "1.4.5",
     "angular-aria": "1.4.5",
     "angular-bootstrap": "0.13.3",
+=======
+    "name": "jhipster",
+    "version": "0.0.0",
+    "appPath": "src/main/webapp",
+    "testPath": "src/test/javascript/spec",
+    "dependencies": {
+    "stomp-websocket": "2.3.4",
+    "sockjs-client": "0.3.4",
+    "bootstrap-sass": "3.3.4",
+    "modernizr": "2.8.3",
+    "jquery": "2.1.3",
+    "json3": "3.3.2",
+    "angular-ui-router": "0.2.13",
+    "angular": "1.3.15",
+    "angular-resource": "1.3.15",
+    "angular-cookies": "1.3.15",
+    "angular-sanitize": "1.3.15",
+    "angular-i18n": "1.3.15",
+    "angular-translate": "2.7.0",
+    "angular-translate-storage-cookie": "2.7.0",
+    "angular-translate-loader-partial": "2.7.0",
+    "angular-dynamic-locale": "0.1.27",
+    "angular-local-storage": "0.2.0",
+    "swagger-ui": "2.0.24",
+>>>>>>> origin/master
     "angular-cache-buster": "0.4.3",
     "angular-cookies": "1.4.5",
     "angular-dynamic-locale": "0.1.27",
@@ -30,6 +56,7 @@
     "swagger-ui": "2.1.2"
   },
   "devDependencies": {
+<<<<<<< HEAD
     "angular-mocks": "1.4.5",
     "angular-scenario": "1.4.5"
   },
@@ -38,5 +65,14 @@
     "angular-cookies": "1.4.5",
     "jquery": "2.1.4",
     "angular-translate": "2.7.2"
+=======
+    "angular-mocks": "1.3.15",
+    "angular-scenario": "1.3.15"
+  },
+  "resolutions": {
+    "angular": "1.3.15",
+    "angular-cookies": "1.3.15",
+    "jquery": "2.1.3"
+>>>>>>> origin/master
   }
 }

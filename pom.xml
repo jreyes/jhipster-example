@@ -21,8 +21,13 @@
     </prerequisites>
 
     <properties>
+<<<<<<< HEAD
         <hikaricp.version>2.4.1</hikaricp.version>
         <assertj-core.version>3.1.0</assertj-core.version>
+=======
+        <HikariCP.version>2.3.7</HikariCP.version>
+        <assertj-core.version>1.0.0m1</assertj-core.version>
+>>>>>>> origin/master
         <awaitility.version>1.4.0</awaitility.version>
         <commons-io.version>2.4</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
@@ -137,6 +142,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.jayway.awaitility</groupId>
@@ -560,12 +566,12 @@
                 <configuration>
                     <changeLogFile>src/main/resources/config/liquibase/master.xml</changeLogFile>
                     <diffChangeLogFile>src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
-                    <driver></driver>
-                    <url></url>
+                    <driver>org.postgresql.Driver</driver>
+                    <url>jdbc:postgresql://localhost/jhipster</url>
                     <defaultSchemaName></defaultSchemaName>
-                    <username></username>
+                    <username>jhipster</username>
                     <password></password>
-                    <referenceUrl>hibernate:spring:jhipster.domain?dialect=</referenceUrl>
+                    <referenceUrl>hibernate:spring:jhipster.domain?dialect=org.hibernate.dialect.PostgreSQL82Dialect</referenceUrl>
                     <verbose>true</verbose>
                     <logging>debug</logging>
                 </configuration>

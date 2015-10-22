@@ -97,10 +97,16 @@ angular.module('jhipsterApp', ['LocalStorageModule', 'tmh.dynamicLocale', 'pasca
         $translateProvider.preferredLanguage('en');
         $translateProvider.useCookieStorage();
         $translateProvider.useSanitizeValueStrategy('escaped');
+<<<<<<< HEAD
         $translateProvider.addInterpolation('$translateMessageFormatInterpolation');
+=======
+>>>>>>> origin/master
 
         tmhDynamicLocaleProvider.localeLocationPattern('bower_components/angular-i18n/angular-locale_{{locale}}.js');
         tmhDynamicLocaleProvider.useCookieStorage();
         tmhDynamicLocaleProvider.storageKey('NG_TRANSLATE_LANG_KEY');
+<<<<<<< HEAD
         
+=======
+>>>>>>> origin/master
     });

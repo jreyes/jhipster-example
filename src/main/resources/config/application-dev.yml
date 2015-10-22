@@ -14,6 +14,7 @@ spring:
     profiles:
         active: dev
     datasource:
+<<<<<<< HEAD
         driver-class-name: org.h2.jdbcx.JdbcDataSource
         url: jdbc:h2:mem:jhipster;DB_CLOSE_DELAY=-1
         name: 
@@ -22,6 +23,19 @@ spring:
     jpa:
         database-platform: jhipster.domain.util.FixedH2Dialect
         database: H2
+=======
+        dataSourceClassName: org.postgresql.ds.PGSimpleDataSource
+        url: 
+        databaseName: jhipster
+        serverName: localhost
+        username: jhipster
+        password: 
+
+    jpa:
+        database-platform: org.hibernate.dialect.PostgreSQL82Dialect
+        database: POSTGRESQL
+        openInView: false
+>>>>>>> origin/master
         show_sql: true
         properties:
             hibernate.cache.use_second_level_cache: true
