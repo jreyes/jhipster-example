@@ -7,7 +7,7 @@ angular.module('jhipsterApp')
                 parent: 'admin',
                 url: '/metrics',
                 data: {
-                    roles: ['ROLE_ADMIN'],
+                    authorities: ['ROLE_ADMIN'],
                     pageTitle: 'metrics.title'
                 },
                 views: {

@@ -7,7 +7,7 @@ angular.module('jhipsterApp')
                 parent: 'account',
                 url: '/reset/finish?key',
                 data: {
-                    roles: []
+                    authorities: []
                 },
                 views: {
                     'content@': {

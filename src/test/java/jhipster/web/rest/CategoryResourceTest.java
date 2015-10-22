@@ -13,6 +13,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -28,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+
 /**
  * Test class for the CategoryResource REST controller.
  *
@@ -39,14 +42,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @IntegrationTest
 public class CategoryResourceTest {
 
-    private static final String DEFAULT_NAME = "SAMPLE_TEXT";
-    private static final String UPDATED_NAME = "UPDATED_TEXT";
+    private static final String DEFAULT_NAME = "AAAAA";
+    private static final String UPDATED_NAME = "BBBBB";
 
     @Inject
     private CategoryRepository categoryRepository;
 
     @Inject
     private CategorySearchRepository categorySearchRepository;
+
+    @Inject
+    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+
+    @Inject
+    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
     private MockMvc restCategoryMockMvc;
 
@@ -58,7 +67,9 @@ public class CategoryResourceTest {
         CategoryResource categoryResource = new CategoryResource();
         ReflectionTestUtils.setField(categoryResource, "categoryRepository", categoryRepository);
         ReflectionTestUtils.setField(categoryResource, "categorySearchRepository", categorySearchRepository);
-        this.restCategoryMockMvc = MockMvcBuilders.standaloneSetup(categoryResource).build();
+        this.restCategoryMockMvc = MockMvcBuilders.standaloneSetup(categoryResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setMessageConverters(jacksonMessageConverter).build();
     }
 
     @Before
@@ -73,6 +84,7 @@ public class CategoryResourceTest {
         int databaseSizeBeforeCreate = categoryRepository.findAll().size();
 
         // Create the Category
+
         restCategoryMockMvc.perform(post("/api/categorys")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(category)))
@@ -131,6 +143,7 @@ public class CategoryResourceTest {
 
         // Update the category
         category.setName(UPDATED_NAME);
+
         restCategoryMockMvc.perform(put("/api/categorys")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(category)))

@@ -1,4 +1,4 @@
-// Generated on 2015-05-08 using generator-jhipster 2.10.1
+// Generated on 2015-10-22 using generator-jhipster 2.22.0
 /* jshint camelcase: false */
 'use strict';
 
@@ -8,8 +8,8 @@ var gulp = require('gulp'),
     minifyCss = require('gulp-minify-css'),
     usemin = require('gulp-usemin'),
     uglify = require('gulp-uglify'),
-    compass = require('gulp-compass'),
-    minifyHtml = require('gulp-minify-html'),
+    sass = require('gulp-sass'),
+    htmlmin = require('gulp-htmlmin'),
     imagemin = require('gulp-imagemin'),
     ngAnnotate = require('gulp-ng-annotate'),
     ngConstant = require('gulp-ng-constant-fork'),
@@ -32,6 +32,7 @@ var yeoman = {
     dist: 'src/main/webapp/dist/',
     test: 'src/test/javascript/spec/',
     tmp: '.tmp/',
+    importPath: 'src/main/webapp/bower_components',
     scss: 'src/main/scss/',
     port: 9000,
     apiPort: 8080,
@@ -65,8 +66,9 @@ gulp.task('test', ['wiredep:test', 'ngconstant:dev'], function() {
 });
 
 gulp.task('copy', function() {
-    return es.merge(gulp.src(yeoman.app + 'i18n/**').
-              pipe(gulp.dest(yeoman.dist + 'i18n/')),
+    return es.merge(  // copy i18n folders only if translation is enabled
+              gulp.src(yeoman.app + 'i18n/**').
+              pipe(gulp.dest(yeoman.dist + 'i18n/')), 
               gulp.src(yeoman.app + 'assets/**/*.{woff,svg,ttf,eot}').
               pipe(flatten()).
               pipe(gulp.dest(yeoman.dist + 'assets/fonts/')));
@@ -79,30 +81,20 @@ gulp.task('images', function() {
         pipe(browserSync.reload({stream: true}));
 });
 
-gulp.task('compass', function() {
-    return gulp.src(yeoman.scss + '**/*.scss').
-        pipe(compass({
-                project: __dirname,
-                sass: 'src/main/scss',
-                css: 'src/main/webapp/assets/styles',
-                generated_images: '.tmp/images/generated',
-                image: 'src/main/webapp/assets/images',
-                javascript: 'src/main/webapp/scripts',
-                font: 'src/main/webapp/assets/fonts',
-                import_path: 'src/main/webapp/bower_components',
-                relative: false
-        })).
-        pipe(gulp.dest(yeoman.tmp + 'styles'));
+gulp.task('sass', function () {
+    return gulp.src(yeoman.scss + '**/*.scss')
+        .pipe(sass({includePaths:yeoman.importPath}).on('error', sass.logError))
+        .pipe(gulp.dest(yeoman.app + 'assets/styles'));
 });
 
-gulp.task('styles', ['compass'], function() {
+gulp.task('styles', ['sass'], function() {
     return gulp.src(yeoman.app + 'assets/styles/**/*.css').
         pipe(gulp.dest(yeoman.tmp)).
         pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task('serve', function() {
-    runSequence('wiredep:test', 'wiredep:app', 'ngconstant:dev', 'compass', function () {
+    runSequence('wiredep:test', 'wiredep:app', 'ngconstant:dev', 'sass', function () {
         var baseUri = 'http://localhost:' + yeoman.apiPort;
         // Routes to proxy to the backend. Routes ending with a / will setup
         // a redirect so that if accessed without a trailing slash, will
@@ -112,8 +104,13 @@ gulp.task('serve', function() {
             '/api',
             '/health',
             '/configprops',
-            '/api-docs',
+            '/v2/api-docs',
+            '/swagger-ui',
+            '/configuration/security',
+            '/configuration/ui',
+            '/swagger-resources',
             '/metrics',
+            '/websocket/tracker',
             '/dump',
             '/console/'
         ];
@@ -165,7 +162,7 @@ gulp.task('watch', function() {
     gulp.watch(['gulpfile.js', 'pom.xml'], ['ngconstant:dev']);
     gulp.watch(yeoman.scss + '**/*.scss', ['styles']);
     gulp.watch(yeoman.app + 'assets/images/**', ['images']);
-    gulp.watch([yeoman.app + '*.html', yeoman.app + 'scripts/**']).on('change', browserSync.reload);
+    gulp.watch([yeoman.app + '*.html', yeoman.app + 'scripts/**', yeoman.app + 'i18n/**']).on('change', browserSync.reload);
 });
 
 gulp.task('wiredep', ['wiredep:test', 'wiredep:app']);
@@ -173,7 +170,7 @@ gulp.task('wiredep', ['wiredep:test', 'wiredep:app']);
 gulp.task('wiredep:app', function () {
     var s = gulp.src('src/main/webapp/index.html')
         .pipe(wiredep({
-            exclude: [/angular-i18n/, /swagger-ui/]
+            exclude: [/angular-i18n/]
         }))
         .pipe(gulp.dest('src/main/webapp'));
 
@@ -181,7 +178,6 @@ gulp.task('wiredep:app', function () {
         .pipe(wiredep({
             exclude: [
                 /angular-i18n/,  // localizations are loaded dynamically
-                /swagger-ui/,
                 'bower_components/bootstrap/' // Exclude Bootstrap LESS as we use bootstrap-sass
             ],
             ignorePath: /\.\.\/webapp\/bower_components\// // remove ../webapp/bower_components/ from paths of injected sass files
@@ -192,7 +188,7 @@ gulp.task('wiredep:app', function () {
 gulp.task('wiredep:test', function () {
     return gulp.src('src/test/javascript/karma.conf.js')
         .pipe(wiredep({
-            exclude: [/angular-i18n/, /swagger-ui/, /angular-scenario/],
+            exclude: [/angular-i18n/, /angular-scenario/],
             ignorePath: /\.\.\/\.\.\//, // remove ../../ from paths of injected javascripts
             devDependencies: true,
             fileTypes: {
@@ -225,7 +221,7 @@ gulp.task('usemin', function() {
                     rev()
                 ],
                 html: [
-                    minifyHtml({empty: true, conditionals:true})
+                    htmlmin({collapseWhitespace: true})
                 ],
                 js: [
                     ngAnnotate(),
@@ -281,5 +277,5 @@ gulp.task('server', ['serve'], function () {
 });
 
 gulp.task('default', function() {
-    runSequence('test', 'build');
+    runSequence('serve');
 });

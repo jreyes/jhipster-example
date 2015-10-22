@@ -12,7 +12,9 @@ angular.module('jhipsterApp')
                     Principal.identity(true).then(function(account) {
                         // After the login the language will be changed to
                         // the language selected by the user during his registration
-                        $translate.use(account.langKey);
+                        $translate.use(account.langKey).then(function(){
+                            $translate.refresh();
+                        });
                         Tracker.sendActivity();
                         deferred.resolve(data);
                     });
@@ -29,6 +31,9 @@ angular.module('jhipsterApp')
             logout: function () {
                 AuthServerProvider.logout();
                 Principal.authenticate(null);
+                // Reset state memory
+                $rootScope.previousStateName = undefined;
+                $rootScope.previousStateNameParams = undefined;
             },
 
             authorize: function(force) {
@@ -36,7 +41,12 @@ angular.module('jhipsterApp')
                     .then(function() {
                         var isAuthenticated = Principal.isAuthenticated();
 
-                        if ($rootScope.toState.data.roles && $rootScope.toState.data.roles.length > 0 && !Principal.isInAnyRole($rootScope.toState.data.roles)) {
+                        // an authenticated user can't access to login and register pages
+                        if (isAuthenticated && $rootScope.toState.parent === 'account' && ($rootScope.toState.name === 'login' || $rootScope.toState.name === 'register')) {
+                            $state.go('home');
+                        }
+
+                        if ($rootScope.toState.data.authorities && $rootScope.toState.data.authorities.length > 0 && !Principal.hasAnyAuthority($rootScope.toState.data.authorities)) {
                             if (isAuthenticated) {
                                 // user is signed in but not authorized for desired state
                                 $state.go('accessdenied');
@@ -44,8 +54,8 @@ angular.module('jhipsterApp')
                             else {
                                 // user is not authenticated. stow the state they wanted before you
                                 // send them to the signin state, so you can return them when you're done
-                                $rootScope.returnToState = $rootScope.toState;
-                                $rootScope.returnToStateParams = $rootScope.toStateParams;
+                                $rootScope.previousStateName = $rootScope.toState;
+                                $rootScope.previousStateNameParams = $rootScope.toStateParams;
 
                                 // now, send them to the signin state so they can log in
                                 $state.go('login');
@@ -99,7 +109,7 @@ angular.module('jhipsterApp')
                     return cb(err);
                 }).$promise;
             },
-            
+
             resetPasswordInit: function (mail, callback) {
                 var cb = callback || angular.noop;
 
@@ -108,13 +118,12 @@ angular.module('jhipsterApp')
                 }, function (err) {
                     return cb(err);
                 }).$promise;
-
             },
 
-            resetPasswordFinish: function(key, newPassword, callback) {
+            resetPasswordFinish: function(keyAndPassword, callback) {
                 var cb = callback || angular.noop;
 
-                return PasswordResetFinish.save(key, newPassword, function () {
+                return PasswordResetFinish.save(keyAndPassword, function () {
                     return cb();
                 }, function (err) {
                     return cb(err);

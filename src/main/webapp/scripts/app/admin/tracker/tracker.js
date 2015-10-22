@@ -5,7 +5,8 @@ angular.module('jhipsterApp')
                 parent: 'admin',
                 url: '/tracker',
                 data: {
-                    roles: ['ROLE_ADMIN']
+                    authorities: ['ROLE_ADMIN'],
+                    pageTitle: 'tracker.title'
                 },
                 views: {
                     'content@': {

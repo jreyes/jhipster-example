@@ -7,7 +7,7 @@ angular.module('jhipsterApp')
                 parent: 'account',
                 url: '/sessions',
                 data: {
-                    roles: ['ROLE_USER'],
+                    authorities: ['ROLE_USER'],
                     pageTitle: 'global.menu.account.sessions'
                 },
                 views: {

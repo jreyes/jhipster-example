@@ -4,26 +4,26 @@
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th translate="entity.detail.field">Field</th>
-                    <th translate="entity.detail.value">Value</th>
-                </tr>
+            <tr>
+                <th translate="entity.detail.field">Field</th>
+                <th translate="entity.detail.value">Value</th>
+            </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>
-                        <span translate="jhipsterApp.category.name">Name</span>
-                    </td>
-                    <td>
-                        <input type="text" class="input-sm form-control" value="{{category.name}}" readonly>
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    <span translate="jhipsterApp.category.name">Name</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{category.name}}</span>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
 
     <button type="submit"
-            ui-sref="category"
+            onclick="window.history.back()"
             class="btn btn-info">
         <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
     </button>

@@ -7,7 +7,7 @@ angular.module('jhipsterApp')
                 parent: 'site',
                 url: '/',
                 data: {
-                    roles: []
+                    authorities: []
                 },
                 views: {
                     'content@': {
